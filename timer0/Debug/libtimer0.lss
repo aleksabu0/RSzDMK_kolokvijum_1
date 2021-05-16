@@ -1,0 +1,261 @@
+In archive libtimer0.a:
+
+timer0.o:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000000  00000000  00000000  00000034  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00000000  00000000  00000034  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000000  00000000  00000000  00000034  2**0
+                  ALLOC
+  3 .stab         000004bc  00000000  00000000  00000034  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+  4 .stabstr      00000728  00000000  00000000  000004f0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .bss.ms       00000004  00000000  00000000  00000c18  2**0
+                  ALLOC
+  6 .text.__vector_14 00000056  00000000  00000000  00000c18  2**0
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  7 .text.timer0InteruptInit 00000092  00000000  00000000  00000c6e  2**0
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  8 .text.timer0millis 00000042  00000000  00000000  00000d00  2**0
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  9 .text.timer0DelayMs 00000068  00000000  00000000  00000d42  2**0
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+
+Disassembly of section .text.__vector_14:
+
+00000000 <__vector_14>:
+
+/**
+* ISR - prekidna rutina tajmera 0 u modu CTC
+*/
+ISR(TIMER0_COMPA_vect)
+{
+   0:	1f 92       	push	r1
+   2:	0f 92       	push	r0
+   4:	0f b6       	in	r0, 0x3f	; 63
+   6:	0f 92       	push	r0
+   8:	11 24       	eor	r1, r1
+   a:	8f 93       	push	r24
+   c:	9f 93       	push	r25
+   e:	af 93       	push	r26
+  10:	bf 93       	push	r27
+  12:	df 93       	push	r29
+  14:	cf 93       	push	r28
+  16:	cd b7       	in	r28, 0x3d	; 61
+  18:	de b7       	in	r29, 0x3e	; 62
+	ms++;
+  1a:	80 91 00 00 	lds	r24, 0x0000
+  1e:	90 91 00 00 	lds	r25, 0x0000
+  22:	a0 91 00 00 	lds	r26, 0x0000
+  26:	b0 91 00 00 	lds	r27, 0x0000
+  2a:	01 96       	adiw	r24, 0x01	; 1
+  2c:	a1 1d       	adc	r26, r1
+  2e:	b1 1d       	adc	r27, r1
+  30:	80 93 00 00 	sts	0x0000, r24
+  34:	90 93 00 00 	sts	0x0000, r25
+  38:	a0 93 00 00 	sts	0x0000, r26
+  3c:	b0 93 00 00 	sts	0x0000, r27
+}
+  40:	cf 91       	pop	r28
+  42:	df 91       	pop	r29
+  44:	bf 91       	pop	r27
+  46:	af 91       	pop	r26
+  48:	9f 91       	pop	r25
+  4a:	8f 91       	pop	r24
+  4c:	0f 90       	pop	r0
+  4e:	0f be       	out	0x3f, r0	; 63
+  50:	0f 90       	pop	r0
+  52:	1f 90       	pop	r1
+  54:	18 95       	reti
+
+Disassembly of section .text.timer0InteruptInit:
+
+00000000 <timer0InteruptInit>:
+
+/**
+* ISR - prekidna rutina tajmera 0 u modu CTC
+*/
+ISR(TIMER0_COMPA_vect)
+{
+   0:	df 93       	push	r29
+   2:	cf 93       	push	r28
+   4:	00 d0       	rcall	.+0      	; 0x6 <timer0InteruptInit+0x6>
+   6:	00 d0       	rcall	.+0      	; 0x8 <timer0InteruptInit+0x8>
+   8:	0f 92       	push	r0
+   a:	cd b7       	in	r28, 0x3d	; 61
+   c:	de b7       	in	r29, 0x3e	; 62
+   e:	e4 e4       	ldi	r30, 0x44	; 68
+  10:	f0 e0       	ldi	r31, 0x00	; 0
+  12:	82 e0       	ldi	r24, 0x02	; 2
+  14:	80 83       	st	Z, r24
+  16:	80 e8       	ldi	r24, 0x80	; 128
+  18:	9e e3       	ldi	r25, 0x3E	; 62
+	ms++;
+  1a:	a0 e0       	ldi	r26, 0x00	; 0
+  1c:	b0 e0       	ldi	r27, 0x00	; 0
+  1e:	8a 83       	std	Y+2, r24	; 0x02
+  20:	9b 83       	std	Y+3, r25	; 0x03
+  22:	ac 83       	std	Y+4, r26	; 0x04
+  24:	bd 83       	std	Y+5, r27	; 0x05
+  26:	81 e0       	ldi	r24, 0x01	; 1
+  28:	89 83       	std	Y+1, r24	; 0x01
+  2a:	00 c0       	rjmp	.+0      	; 0x2c <timer0InteruptInit+0x2c>
+  2c:	8a 81       	ldd	r24, Y+2	; 0x02
+  2e:	9b 81       	ldd	r25, Y+3	; 0x03
+  30:	ac 81       	ldd	r26, Y+4	; 0x04
+  32:	bd 81       	ldd	r27, Y+5	; 0x05
+  34:	68 94       	set
+  36:	12 f8       	bld	r1, 2
+  38:	b6 95       	lsr	r27
+  3a:	a7 95       	ror	r26
+  3c:	97 95       	ror	r25
+  3e:	87 95       	ror	r24
+}
+  40:	16 94       	lsr	r1
+  42:	01 f4       	brne	.+0      	; 0x44 <timer0InteruptInit+0x44>
+  44:	8a 83       	std	Y+2, r24	; 0x02
+  46:	9b 83       	std	Y+3, r25	; 0x03
+  48:	ac 83       	std	Y+4, r26	; 0x04
+  4a:	bd 83       	std	Y+5, r27	; 0x05
+  4c:	89 81       	ldd	r24, Y+1	; 0x01
+  4e:	8f 5f       	subi	r24, 0xFF	; 255
+  50:	89 83       	std	Y+1, r24	; 0x01
+  52:	8a 81       	ldd	r24, Y+2	; 0x02
+  54:	9b 81       	ldd	r25, Y+3	; 0x03
+  56:	ac 81       	ldd	r26, Y+4	; 0x04
+  58:	bd 81       	ldd	r27, Y+5	; 0x05
+  5a:	8f 3f       	cpi	r24, 0xFF	; 255
+  5c:	91 05       	cpc	r25, r1
+  5e:	a1 05       	cpc	r26, r1
+  60:	b1 05       	cpc	r27, r1
+  62:	01 f0       	breq	.+0      	; 0x64 <timer0InteruptInit+0x64>
+  64:	00 f4       	brcc	.+0      	; 0x66 <timer0InteruptInit+0x66>
+  66:	e5 e4       	ldi	r30, 0x45	; 69
+  68:	f0 e0       	ldi	r31, 0x00	; 0
+  6a:	89 81       	ldd	r24, Y+1	; 0x01
+  6c:	80 83       	st	Z, r24
+  6e:	e7 e4       	ldi	r30, 0x47	; 71
+  70:	f0 e0       	ldi	r31, 0x00	; 0
+  72:	8a 81       	ldd	r24, Y+2	; 0x02
+  74:	81 50       	subi	r24, 0x01	; 1
+  76:	80 83       	st	Z, r24
+  78:	ee e6       	ldi	r30, 0x6E	; 110
+  7a:	f0 e0       	ldi	r31, 0x00	; 0
+  7c:	82 e0       	ldi	r24, 0x02	; 2
+  7e:	80 83       	st	Z, r24
+  80:	78 94       	sei
+  82:	0f 90       	pop	r0
+  84:	0f 90       	pop	r0
+  86:	0f 90       	pop	r0
+  88:	0f 90       	pop	r0
+  8a:	0f 90       	pop	r0
+  8c:	cf 91       	pop	r28
+  8e:	df 91       	pop	r29
+  90:	08 95       	ret
+
+Disassembly of section .text.timer0millis:
+
+00000000 <timer0millis>:
+
+/**
+* ISR - prekidna rutina tajmera 0 u modu CTC
+*/
+ISR(TIMER0_COMPA_vect)
+{
+   0:	df 93       	push	r29
+   2:	cf 93       	push	r28
+   4:	00 d0       	rcall	.+0      	; 0x6 <timer0millis+0x6>
+   6:	00 d0       	rcall	.+0      	; 0x8 <timer0millis+0x8>
+   8:	cd b7       	in	r28, 0x3d	; 61
+   a:	de b7       	in	r29, 0x3e	; 62
+   c:	f8 94       	cli
+   e:	80 91 00 00 	lds	r24, 0x0000
+  12:	90 91 00 00 	lds	r25, 0x0000
+  16:	a0 91 00 00 	lds	r26, 0x0000
+	ms++;
+  1a:	b0 91 00 00 	lds	r27, 0x0000
+  1e:	89 83       	std	Y+1, r24	; 0x01
+  20:	9a 83       	std	Y+2, r25	; 0x02
+  22:	ab 83       	std	Y+3, r26	; 0x03
+  24:	bc 83       	std	Y+4, r27	; 0x04
+  26:	78 94       	sei
+  28:	89 81       	ldd	r24, Y+1	; 0x01
+  2a:	9a 81       	ldd	r25, Y+2	; 0x02
+  2c:	ab 81       	ldd	r26, Y+3	; 0x03
+  2e:	bc 81       	ldd	r27, Y+4	; 0x04
+  30:	bc 01       	movw	r22, r24
+  32:	cd 01       	movw	r24, r26
+  34:	0f 90       	pop	r0
+  36:	0f 90       	pop	r0
+  38:	0f 90       	pop	r0
+  3a:	0f 90       	pop	r0
+  3c:	cf 91       	pop	r28
+  3e:	df 91       	pop	r29
+}
+  40:	08 95       	ret
+
+Disassembly of section .text.timer0DelayMs:
+
+00000000 <timer0DelayMs>:
+
+/**
+* ISR - prekidna rutina tajmera 0 u modu CTC
+*/
+ISR(TIMER0_COMPA_vect)
+{
+   0:	df 93       	push	r29
+   2:	cf 93       	push	r28
+   4:	cd b7       	in	r28, 0x3d	; 61
+   6:	de b7       	in	r29, 0x3e	; 62
+   8:	28 97       	sbiw	r28, 0x08	; 8
+   a:	0f b6       	in	r0, 0x3f	; 63
+   c:	f8 94       	cli
+   e:	de bf       	out	0x3e, r29	; 62
+  10:	0f be       	out	0x3f, r0	; 63
+  12:	cd bf       	out	0x3d, r28	; 61
+  14:	6d 83       	std	Y+5, r22	; 0x05
+  16:	7e 83       	std	Y+6, r23	; 0x06
+  18:	8f 83       	std	Y+7, r24	; 0x07
+	ms++;
+  1a:	98 87       	std	Y+8, r25	; 0x08
+  1c:	0e 94 00 00 	call	0	; 0x0 <timer0DelayMs>
+  20:	dc 01       	movw	r26, r24
+  22:	cb 01       	movw	r24, r22
+  24:	89 83       	std	Y+1, r24	; 0x01
+  26:	9a 83       	std	Y+2, r25	; 0x02
+  28:	ab 83       	std	Y+3, r26	; 0x03
+  2a:	bc 83       	std	Y+4, r27	; 0x04
+  2c:	0e 94 00 00 	call	0	; 0x0 <timer0DelayMs>
+  30:	9b 01       	movw	r18, r22
+  32:	ac 01       	movw	r20, r24
+  34:	89 81       	ldd	r24, Y+1	; 0x01
+  36:	9a 81       	ldd	r25, Y+2	; 0x02
+  38:	ab 81       	ldd	r26, Y+3	; 0x03
+  3a:	bc 81       	ldd	r27, Y+4	; 0x04
+  3c:	28 1b       	sub	r18, r24
+  3e:	39 0b       	sbc	r19, r25
+}
+  40:	4a 0b       	sbc	r20, r26
+  42:	5b 0b       	sbc	r21, r27
+  44:	8d 81       	ldd	r24, Y+5	; 0x05
+  46:	9e 81       	ldd	r25, Y+6	; 0x06
+  48:	af 81       	ldd	r26, Y+7	; 0x07
+  4a:	b8 85       	ldd	r27, Y+8	; 0x08
+  4c:	28 17       	cp	r18, r24
+  4e:	39 07       	cpc	r19, r25
+  50:	4a 07       	cpc	r20, r26
+  52:	5b 07       	cpc	r21, r27
+  54:	00 f0       	brcs	.+0      	; 0x56 <timer0DelayMs+0x56>
+  56:	28 96       	adiw	r28, 0x08	; 8
+  58:	0f b6       	in	r0, 0x3f	; 63
+  5a:	f8 94       	cli
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	0f be       	out	0x3f, r0	; 63
+  60:	cd bf       	out	0x3d, r28	; 61
+  62:	cf 91       	pop	r28
+  64:	df 91       	pop	r29
+  66:	08 95       	ret
